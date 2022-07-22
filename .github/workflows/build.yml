@@ -1,5 +1,5 @@
 name: Build
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   tests:
@@ -17,9 +17,9 @@ jobs:
 
       # - run: yarn build
 
-      - run: tar -czf wallet-adapter.tar.gz -C wallet-adapter .
+      - run: tar -czf wallet-adapter.tar.gz *
 
       - uses: actions/upload-artifact@v3
         with:
           name: wallet-adapter
-          path: ../wallet-adapter.tar.gz
+          path: wallet-adapter.tar.gz
