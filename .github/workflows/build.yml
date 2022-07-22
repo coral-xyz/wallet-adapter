@@ -1,0 +1,25 @@
+name: Build
+on: [pull_request]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    name: Build
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: yarn
+
+      - run: yarn install
+
+      - run: yarn build
+
+      - run: tar -czf wallet-adapter.tar.gz *
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: wallet-adapter
+          path: wallet-adapter.tar.gz
