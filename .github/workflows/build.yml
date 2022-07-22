@@ -8,14 +8,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      # - uses: actions/setup-node@v3
-      #   with:
-      #     node-version: 16
-      #     cache: yarn
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: yarn
 
-      # - run: yarn install
+      - run: yarn install
 
-      # - run: yarn build
+      - run: yarn build
 
       - run: tar -czf wallet-adapter.tar.gz *
 
