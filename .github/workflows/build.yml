@@ -7,16 +7,17 @@ jobs:
     name: Build
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: yarn
 
-      - run: yarn install
+      # - uses: actions/setup-node@v3
+      #   with:
+      #     node-version: 16
+      #     cache: yarn
 
-      - run: yarn build
+      # - run: yarn install
 
-      - run: cd .. && tar -czf wallet-adapter.tar.gz wallet-adapter
+      # - run: yarn build
+
+      - run: tar -czf wallet-adapter.tar.gz -C wallet-adapter .
 
       - uses: actions/upload-artifact@v3
         with:
