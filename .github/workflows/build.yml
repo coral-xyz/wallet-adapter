@@ -16,7 +16,9 @@ jobs:
 
       - run: yarn build
 
+      - run: cd .. && tar -czf wallet-adapter.tar.gz wallet-adapter
+
       - uses: actions/upload-artifact@v3
         with:
           name: wallet-adapter
-          path: .
+          path: ../wallet-adapter.tar.gz
