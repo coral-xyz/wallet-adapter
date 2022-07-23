@@ -103,31 +103,16 @@ export class BackpackWalletAdapter extends BaseMessageSignerWalletAdapter {
         try {
             if (this.connected || this.connecting) return;
             if (this._readyState !== WalletReadyState.Installed) throw new WalletNotReadyError();
+
             this._connecting = true;
 
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const wallet = window!.backpack!;
 
-            if (!wallet.isConnected) {
-                try {
-                    await new Promise<void>((resolve, reject) => {
-                        const handleConnect = () => {
-                            wallet.off('connect', handleConnect);
-                            resolve();
-                        };
-
-                        // Backpack emits a connect event when it is ready
-                        wallet.on('connect', handleConnect);
-
-                        wallet.connect().catch(() => {
-                            wallet.off('connect', handleConnect);
-                            reject(new WalletWindowClosedError());
-                        });
-                    });
-                } catch (error: any) {
-                    if (error instanceof WalletError) throw error;
-                    throw new WalletConnectionError(error?.message, error);
-                }
+            try {
+                await wallet.connect();
+            } catch (error: any) {
+                throw new WalletConnectionError(error?.message, error);
             }
 
             if (!wallet.publicKey) throw new WalletAccountError();
@@ -138,6 +123,7 @@ export class BackpackWalletAdapter extends BaseMessageSignerWalletAdapter {
             } catch (error: any) {
                 throw new WalletPublicKeyError(error?.message, error);
             }
+
             wallet.on('disconnect', this._disconnected);
 
             this._wallet = wallet;
