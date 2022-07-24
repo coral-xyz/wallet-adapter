@@ -36,7 +36,7 @@ interface BackpackWallet extends EventEmitter<BackpackWalletEvents> {
         options?: SendOptions,
         connection?: Connection
     ): Promise<TransactionSignature>;
-    signMessage(message: Uint8Array): Promise<Uint8Array | null>;
+    signMessage(message: Uint8Array): Promise<Uint8Array>;
     connect(): Promise<void>;
     disconnect(): Promise<void>;
 }
@@ -167,11 +167,7 @@ export class BackpackWalletAdapter extends BaseMessageSignerWalletAdapter {
 
             const { signers, ...sendOptions } = options ? options : { signers: undefined };
 
-            const resp = await wallet.send(transaction, signers, sendOptions, connection);
-            if (!resp) {
-                throw new WalletWindowClosedError();
-            }
-            return resp;
+            return await wallet.send(transaction, signers, sendOptions, connection);
         } catch (error: any) {
             this.emit('error', error);
             throw error;
@@ -216,11 +212,7 @@ export class BackpackWalletAdapter extends BaseMessageSignerWalletAdapter {
             if (!wallet) throw new WalletNotConnectedError();
 
             try {
-                const signature = await wallet.signMessage(message);
-                if (!signature) {
-                    throw new Error('User denied signature request');
-                }
-                return signature;
+                return await wallet.signMessage(message);
             } catch (error: any) {
                 throw new WalletSignMessageError(error?.message, error);
             }
